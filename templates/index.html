@@ -16,6 +16,15 @@
         font-weight: 400;
         font-style: normal;
       }
+
+      .box-text {
+        border: 1px solid gray;
+        border-radius: 25px;
+        padding: 15px;
+        word-break: break-word;
+        white-space: normal;
+        width: 80%;
+      }
     </style>
   </head>
 
@@ -29,9 +38,7 @@
     </form>
 
     <p>Server Response:</p>
-    <div style="border: 1px solid gray; border-radius: 25px; padding: 10px">
-      <pre id="message"> Text will show here</pre>
-    </div>
+    <pre id="message" class="box-text"> Text will show here</pre>
 
     <script>
       document
@@ -49,7 +56,8 @@
 
           const formData = new FormData();
           formData.append("audio", audioFile); // Append the audio file to the form data
-          document.getElementById("message").innerText = "Processing... wait a minutes...";
+          document.getElementById("message").innerText =
+            "Processing... wait a minutes...";
 
           try {
             // Send the audio file to the server using fetch
@@ -62,8 +70,9 @@
             document.getElementById("message").innerText = `${result.message}`;
           } catch (error) {
             console.error("Error uploading audio:", error);
-            document.getElementById("message").innerText =
-              `Error uploading audio. Please try again.`
+            document.getElementById(
+              "message"
+            ).innerText = `Error uploading audio. Please try again.`;
           }
         });
     </script>
