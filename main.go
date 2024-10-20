@@ -20,6 +20,11 @@ func main() {
 
 	client := aai.NewClient(apiKey)
 	ctx := context.Background()
+	options := &aai.TranscriptOptionalParams{
+		LanguageCode: "en",
+		SpeechModel:  "best",
+		BoostParam:   "high",
+	}
 
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
@@ -50,7 +55,7 @@ func main() {
 			return
 		}
 
-		transcript, _ := client.Transcripts.TranscribeFromReader(ctx, buf, nil)
+		transcript, _ := client.Transcripts.TranscribeFromReader(ctx, buf, options)
 
 		c.JSON(http.StatusOK, gin.H{
 			"message": *transcript.Text,
