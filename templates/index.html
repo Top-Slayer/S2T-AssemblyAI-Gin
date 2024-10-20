@@ -37,8 +37,12 @@
       <button type="submit">Upload Audio</button>
     </form>
 
-    <p>Server Response:</p>
-    <pre id="message" class="box-text"> Text will show here</pre>
+    <p>Transcription Response:</p>
+    <pre id="message" class="box-text"> Transcription text will show here</pre>
+    <p>Conversation Response:</p>
+    <pre id="conversation" class="box-text">
+ Conversation text will show here</pre
+    >
 
     <script>
       document
@@ -56,7 +60,10 @@
 
           const formData = new FormData();
           formData.append("audio", audioFile); // Append the audio file to the form data
+
           document.getElementById("message").innerText =
+            "Processing... wait a minutes...";
+          document.getElementById("conversation").innerText =
             "Processing... wait a minutes...";
 
           try {
@@ -68,10 +75,21 @@
 
             const result = await response.json();
             document.getElementById("message").innerText = `${result.message}`;
+
+            let conversationText = "";
+            result.conversation.forEach((element) => {
+              conversationText += `${element}\n`;
+              console.log(element);
+            });
+            document.getElementById("conversation").innerText =
+              conversationText;
           } catch (error) {
             console.error("Error uploading audio:", error);
             document.getElementById(
               "message"
+            ).innerText = `Error uploading audio. Please try again.`;
+            document.getElementById(
+              "conversation"
             ).innerText = `Error uploading audio. Please try again.`;
           }
         });

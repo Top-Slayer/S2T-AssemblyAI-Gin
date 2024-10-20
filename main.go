@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -21,9 +22,10 @@ func main() {
 	client := aai.NewClient(apiKey)
 	ctx := context.Background()
 	options := &aai.TranscriptOptionalParams{
-		LanguageCode: "en",
-		SpeechModel:  "best",
-		BoostParam:   "high",
+		LanguageCode:  "en",
+		SpeechModel:   "best",
+		BoostParam:    "high",
+		SpeakerLabels: aai.Bool(true),
 	}
 
 	r := gin.Default()
@@ -57,8 +59,14 @@ func main() {
 
 		transcript, _ := client.Transcripts.TranscribeFromReader(ctx, buf, options)
 
+		conversion_text := []string{}
+		for _, utterance := range transcript.Utterances {
+			conversion_text = append(conversion_text, fmt.Sprintf("Speaker %v: %v", *utterance.Speaker, *utterance.Text))
+		}
+
 		c.JSON(http.StatusOK, gin.H{
-			"message": *transcript.Text,
+			"message":      *transcript.Text,
+			"conversation": conversion_text,
 		})
 	})
 
